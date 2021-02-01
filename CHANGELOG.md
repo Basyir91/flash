@@ -1,20 +1,6 @@
-## [1.5.2+1] - 2021-4-28
-- Remove optional params rootNavigator.
-- Change the method of finding root overlay.
+## [1.3.2] - 2021-2-1
 
-## [1.5.2] - 2021-4-28
-- Add optional params rootNavigator.
-
-## [1.5.1] - 2021-3-25
-- Fix return value to nullable.
-
-## [1.5.0] - 2021-3-9
-- Stable null-safety release
-
-## [1.4.0-nullsafety] - 2020-11-19
-
-- Migrate to null safety.
-- Update example.
+- fix: #15 .
 
 ## [1.3.1] - 2020-4-25
 

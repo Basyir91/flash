@@ -1,39 +1,27 @@
 import 'dart:async';
 
-// import 'package:back_button_interceptor/back_button_interceptor.dart';
-// import 'package:device_preview/device_preview.dart';
+import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:example/flash_helper.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(App());
+void main() => runApp(
+      DevicePreview(
+        enabled: kIsWeb,
+        usePreferences: true,
+        builder: (context) => App(),
+      ),
+    );
 
 class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      builder: (context, child) {
-        if (kIsWeb) {
-          return Stack(
-            alignment: Alignment.center,
-            children: [
-              ClipPath(
-                child: FittedBox(
-                  child: SizedBox(
-                    width: 414,
-                    height: 896,
-                    child: child,
-                  ),
-                ),
-              ),
-            ],
-          );
-        } else {
-          return child!;
-        }
-      },
+      builder: DevicePreview.appBuilder,
+      locale: DevicePreview.of(context).locale,
       title: 'Flash Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -44,7 +32,7 @@ class App extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key, required this.title}) : super(key: key);
+  HomePage({Key key, this.title}) : super(key: key);
 
   final String title;
 
@@ -103,22 +91,22 @@ class FlashPage extends StatefulWidget {
 class _FlashPageState extends State<FlashPage> {
   GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   BackButtonInterceptor.add(onBackPressed);
-  // }
-  //
-  // @override
-  // void dispose() {
-  //   BackButtonInterceptor.remove(onBackPressed);
-  //   super.dispose();
-  // }
-  //
-  // bool onBackPressed(bool stopDefaultButtonEvent, RouteInfo routeInfo) {
-  //   // Handle android back event here. WillPopScope is not recommended.
-  //   return false;
-  // }
+  @override
+  void initState() {
+    super.initState();
+    BackButtonInterceptor.add(onBackPressed);
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(onBackPressed);
+    super.dispose();
+  }
+
+  bool onBackPressed(bool stopDefaultButtonEvent, RouteInfo info) {
+    // Handle android back event here. WillPopScope is not recommended.
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,11 +126,11 @@ class _FlashPageState extends State<FlashPage> {
                         content: Text(
                             '⚡️A highly customizable, powerful and easy-to-use alerting library for Flutter.'),
                         actions: <Widget>[
-                          TextButton(
+                          FlatButton(
                             onPressed: () => Navigator.pop(context),
                             child: Text('YES'),
                           ),
-                          TextButton(
+                          FlatButton(
                             onPressed: () => Navigator.pop(context),
                             child: Text('NO'),
                           ),
@@ -176,42 +164,42 @@ class _FlashPageState extends State<FlashPage> {
                         Text('FlashBar'),
                       ],
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => _showBasicsFlash(),
                       child: Text('Basics'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () =>
                           _showBasicsFlash(duration: Duration(seconds: 2)),
                       child: Text('Basics | Duration'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () =>
                           _showBasicsFlash(flashStyle: FlashStyle.grounded),
                       child: Text('Basics | Grounded'),
                     ),
                     Row(children: <Widget>[]),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => _showTopFlash(),
                       child: Text('Top'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () =>
                           _showTopFlash(style: FlashStyle.grounded),
                       child: Text('Top | Grounded'),
                     ),
                     Row(children: <Widget>[]),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => _showBottomFlash(),
                       child: Text('Bottom'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => _showBottomFlash(
                           margin: const EdgeInsets.only(
                               left: 12.0, right: 12.0, bottom: 34.0)),
                       child: Text('Bottom | Margin'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => _showBottomFlash(persistent: false),
                       child: Text('Bottom | No Persistent'),
                     ),
@@ -220,11 +208,11 @@ class _FlashPageState extends State<FlashPage> {
                         Text('Flash Input'),
                       ],
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => _showInputFlash(),
                       child: Text('Input'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => _showInputFlash(
                         persistent: false,
                         onWillPop: () => Future.value(true),
@@ -236,18 +224,18 @@ class _FlashPageState extends State<FlashPage> {
                         Text('Flash Toast'),
                       ],
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => _showCenterFlash(
                           position: FlashPosition.top,
                           style: FlashStyle.floating),
                       child: Text('Top'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () =>
                           _showCenterFlash(alignment: Alignment.center),
                       child: Text('Center'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => _showCenterFlash(
                           position: FlashPosition.bottom,
                           style: FlashStyle.floating),
@@ -258,42 +246,42 @@ class _FlashPageState extends State<FlashPage> {
                         Text('Flash Helper'),
                       ],
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => FlashHelper.toast(
                           'You can put any message of any length here.'),
                       child: Text('Toast'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => FlashHelper.successBar(context,
                           message: 'I succeeded!'),
                       child: Text('Success Bar'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => FlashHelper.infoBar(context,
                           message: 'Place information here!'),
                       child: Text('Information Bar'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => FlashHelper.errorBar(context,
                           message: 'Place error here!'),
                       child: Text('Error Bar'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => FlashHelper.actionBar(context,
                           message: 'Place error here!',
                           primaryAction: (context, controller, setState) {
-                        return TextButton(
+                        return FlatButton(
                           child: Text('Done'),
                           onPressed: () => controller.dismiss(),
                         );
                       }),
                       child: Text('Action Bar'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () => _showDialogFlash(),
                       child: Text('Simple Dialog'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () {
                         var completer = Completer();
                         Future.delayed(Duration(seconds: 5))
@@ -305,14 +293,14 @@ class _FlashPageState extends State<FlashPage> {
                       },
                       child: Text('Block Dialog'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () {
                         Future.delayed(
                             Duration(seconds: 2), () => _showDialogFlash());
                       },
                       child: Text('Simple Dialog Delay'),
                     ),
-                    ElevatedButton(
+                    RaisedButton(
                       onPressed: () {
                         FlashHelper.inputDialog(context,
                                 persistent: false,
@@ -341,7 +329,7 @@ class _FlashPageState extends State<FlashPage> {
   }
 
   void _showBasicsFlash({
-    Duration? duration,
+    Duration duration,
     flashStyle = FlashStyle.floating,
   }) {
     showFlash(
@@ -381,7 +369,7 @@ class _FlashPageState extends State<FlashPage> {
             title: Text('Title'),
             message: Text('Hello world!'),
             showProgressIndicator: true,
-            primaryAction: TextButton(
+            primaryAction: FlatButton(
               onPressed: () => controller.dismiss(),
               child: Text('DISMISS', style: TextStyle(color: Colors.amber)),
             ),
@@ -418,15 +406,15 @@ class _FlashPageState extends State<FlashPage> {
               message: Text('You can put any message of any length here.'),
               leftBarIndicatorColor: Colors.red,
               icon: Icon(Icons.info_outline),
-              primaryAction: TextButton(
+              primaryAction: FlatButton(
                 onPressed: () => controller.dismiss(),
                 child: Text('DISMISS'),
               ),
               actions: <Widget>[
-                TextButton(
+                FlatButton(
                     onPressed: () => controller.dismiss('Yes, I do!'),
                     child: Text('YES')),
-                TextButton(
+                FlatButton(
                     onPressed: () => controller.dismiss('No, I do not!'),
                     child: Text('NO')),
               ],
@@ -443,7 +431,7 @@ class _FlashPageState extends State<FlashPage> {
 
   void _showInputFlash({
     bool persistent = true,
-    WillPopCallback? onWillPop,
+    WillPopCallback onWillPop,
   }) {
     var editingController = TextEditingController();
     showFlash(
@@ -490,9 +478,9 @@ class _FlashPageState extends State<FlashPage> {
   }
 
   void _showCenterFlash({
-    FlashPosition? position,
-    FlashStyle? style,
-    Alignment? alignment,
+    FlashPosition position,
+    FlashStyle style,
+    Alignment alignment,
   }) {
     showFlash(
       context: context,
@@ -533,13 +521,13 @@ class _FlashPageState extends State<FlashPage> {
       message:
           '⚡️A highly customizable, powerful and easy-to-use alerting library for Flutter.',
       negativeAction: (context, controller, setState) {
-        return TextButton(
+        return FlatButton(
           child: Text('NO'),
           onPressed: () => controller.dismiss(),
         );
       },
       positiveAction: (context, controller, setState) {
-        return TextButton(
+        return FlatButton(
           child: Text('YES'),
           onPressed: () => controller.dismiss(),
         );
